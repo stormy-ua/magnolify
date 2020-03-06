@@ -12,6 +12,17 @@ matrix:
     - scala: 2.13.1
       jdk: openjdk11
 
+    - name: scalafmt
+      scala: 2.13.1
+      jdk: openjdk11
+      script: sbt ++$TRAVIS_SCALA_VERSION clean scalafmtSbtCheck scalafmtCheck test:scalafmtCheck
+
+    - name: coverage
+      scala: 2.13.1
+      jdk: openjdk11
+      script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport coverageAggregate
+      after_success: bash <(curl -s https://codecov.io/bash)
+
 before_cache:
   # Tricks to avoid unnecessary cache updates
   - rm -f $HOME/.ivy2/.sbt.ivy.lock
@@ -25,10 +36,7 @@ cache:
     - $HOME/.sbt/boot
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean scalafmtSbtCheck scalafmtCheck test:scalafmtCheck coverage test coverageReport coverageAggregate
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - sbt ++$TRAVIS_SCALA_VERSION clean test
 
 notifications:
   email:
