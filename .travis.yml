@@ -23,6 +23,11 @@ matrix:
       script: sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport coverageAggregate
       after_success: bash <(curl -s https://codecov.io/bash)
 
+    - name: avro
+      scala: 2.13.1
+      jdk: openjdk11
+      script: sbt ++$TRAVIS_SCALA_VERSION -Davro.version=1.8.2 clean avro/test
+
 before_cache:
   # Tricks to avoid unnecessary cache updates
   - rm -f $HOME/.ivy2/.sbt.ivy.lock
